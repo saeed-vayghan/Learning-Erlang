@@ -51,6 +51,8 @@ doublex([]) -> [].
 %% [2,4,[6,8],[10,[12,24],6]]
 
 
+last_tail([_|T]) -> last_tail(T);
+last_tail(Tail) -> Tail
 
 nth(1, [H|T]) -> H;
 nth(N, [_|T]) -> nth(N - 1, T).

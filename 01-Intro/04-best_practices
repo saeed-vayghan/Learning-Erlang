@@ -15,6 +15,6 @@ uppercase_ascii(X) ->
 
 This separation of error detection and error handling is a key part of Erlang.
 It reduces complexity in fault-tolerant systems by keeping the normal and error-handling code separate.
+
 As for most advice, there are exceptions to the recommendation:
 One example is the case where input is coming from an untrusted interface => e.g. a user or an external program. 
-

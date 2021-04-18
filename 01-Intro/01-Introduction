@@ -66,3 +66,22 @@ Runtime environment provides following services to the program/process:
 	- Environment variables
 	- Proper initialization
 	- Proper disposal
+
+
+
+---------------------------------------------------------
+** Type system
+Erlang is dynamically typed: every error is caught at runtime and the compiler won't always yell at you when compiling modules where things may result in failure.
+
+Dynamically typed rather means that the type of an object is determined at runtime, instead of at compile time.
+
+For example, the compiler will not have any complaints about this code:
+
+foo() ->
+	X = {a,b,c},
+	[H|T] = X.
+
+but if you run it, it will cause a run-time error, since the head-tail pattern cannot be used on a tuple.
+In a statically typed language, this program wouldn't compile.
+
+more: https://zach-gollwitzer.medium.com/imperative-vs-declarative-programming-procedural-functional-and-oop-b03a53ba745c

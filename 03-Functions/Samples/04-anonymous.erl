@@ -43,4 +43,3 @@ AlarmReady().
 % Alarm tripped in bathroom! Call Batman!
 % Alarm tripped in bathroom! Call Batman!
 % ...
-

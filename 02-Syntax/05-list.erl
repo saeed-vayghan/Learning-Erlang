@@ -84,3 +84,29 @@ lists:foldl(P, [], [1,2,3]).
 % [2 | [1]]  <== new Acc becomes [2, 1]
 % [3 | [2,1]] 
 % [3,2,1]
+
+
+
+
+
+
+% In Erlang are written as [Head|Tail] and nil is written as [].
+% In Arr and Arrx cases the syntax ensures that there is a hidden 'empty' tail.
+
+Len = fun
+  Len([_|T]) -> 1 + Len(T);
+  Len([]) -> 0
+end
+
+% 4> Arr  = [1,2,3,4].
+% 5> Arrx = [1,2,3 | [4]].
+% 6> Improper = [1,2,3 | 4].
+
+% 7> Len(Arr).
+% 4
+
+% 8> Len(Arrx).
+% 4
+
+% 9> Len(Improper).
+% ** ImproperArr error: no function clause matching erl_eval:'-inside-an-interpreted-fun-'(5) 
