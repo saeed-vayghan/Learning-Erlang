@@ -1,7 +1,7 @@
 What is Mnesia good at?
 
 Locking and Transactions
-  If you need to keep a database that will be used by multiple processes and/or nodes, using Mnesia means you don't have to write your own access controls. 
+	If you need to keep a database that will be used by multiple processes and/or nodes, using Mnesia means you don't have to write your own access controls. 
 
 Distribution (redundancy)
 	Tables can be replicated at many nodes, both for efficiency and robustness.
@@ -18,11 +18,9 @@ What is Mnesia not so good at?
 	Mnesia is primarily intended to be a memory-resident database. Some of its design tradeoffs reflect this. 
 
 Is Mnesia good for storing blobs? It depends!
-	Available memory limitaiton
+	Available memory limitaiton.
   disc_only_copies tables do not suffer from this limitation but they are slow
   Replication - if the table has a replica then updating an entry and rebuilding after a restart will copy the data over the network between the two machines.
-
-
 
 How much data can be stored in Mnesia?
   For ram_copies and disc_copies, the entire table is kept in memory, so data size is limited by available RAM.
