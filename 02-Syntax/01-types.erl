@@ -82,6 +82,8 @@ variables() ->
 
 
   %% Bit String
+  %% Use a data structure called a binary to store large quantities of raw data.
+  %% Binaries store data in a much more space efficient manner than in lists or tuples.
   Bin1 = <<10,20>>, %% a Bit String consisting of 2 bits.
   X = binary_to_list(Bin1),
   io:fwrite("~w",[X]).
