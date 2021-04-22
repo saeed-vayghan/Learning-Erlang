@@ -1,12 +1,12 @@
-[saeed@localhost erlang]$ erl
+[localhost erlang]$ erl
 
 ## Compile a file
 c(<file-name-without-extension>).
 
 ## Run a method
-hello:<func-name>().
+<module_name>:<func-name>().
 
-## Quit the Erlang shell
+## Quit the Erlang shell:
 ## To shut a system down cleanly, use init:stop(). 
 ## Some quick ways are evaluating halt(). or Control+\. 
 ## Control+C and Control+G give you access to menus. 
@@ -19,15 +19,11 @@ hello:<func-name>().
 ## Clear the shell
 io:format(os:cmd(clear)).
 io:format("\ec").
-f().  %% forget all
-
 
 ##  Information about individual processes can be obtained from erlang:process_info/1 or erlang:process_info/2: 
 erlang:process_info(self(), memory).
 
-
 ---------------------------------------------------------------------------
-
 
 b() is used to display all the binded variables.
 
