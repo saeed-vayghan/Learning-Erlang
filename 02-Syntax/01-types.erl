@@ -3,6 +3,7 @@
 -export([variables/0]).
 
 
+%% Term        - A piece of data of any data type is called a term.
 %% Number      − Integers and Floats.
 %% Atom        − An atom is a literal, a constant with name.
 %% Boolean     − True or False
