@@ -67,16 +67,13 @@ https://stackoverflow.com/questions/2708033/technically-why-are-processes-in-erl
 
 [Erlang] is a concurrent language – by that I mean that threads are part of the programming language,
 they do not belong to the operating system. That's really what's wrong with programming languages like Java and C++.
-It's threads aren't in the programming language, threads are something in the operating system – and they inherit all the problems that they have in the operating system.
+Threads aren't in the programming language, threads are something in the operating system – and they inherit all the problems that they have in the operating system.
 
 
 Tip:
 Each process provides the resources needed to execute a program. 
 A thread is an entity within a process that can be scheduled for execution.
 But, Erlang uses the term "process" because it does not expose a shared-memory multiprogramming model. Calling them "threads" would imply that they have shared memory.
-
-Fault-tolerance and scalability are the main advantages of using Processes vs. Threads.
-
 
 Read more about run-queue and processes-migration ??
 Read more about the best cases of Parallelism ??
