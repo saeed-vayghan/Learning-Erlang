@@ -29,9 +29,6 @@ Everything else should cause errors as soon as possible.
 ** Erlang shell:
 The Erlang shell works by reading an Erlang expression, evaluating it, printing the result and looping for another expression, i.e. a REPL shell. 
 
-
-** Erlang has avoided many features commonly found in modern functional or logic programming languages.
-Currying, higher-order functions, lazy evaluation, ZF comprehension, logical variables, deep guards, etc.
 The use of a pattern matching syntax, and the `single assignment' property of Erlang variables, leads to clear, short and reliable programs.
 
 ** The module system allows the structuring of very large programs into conceptually manageable units.
