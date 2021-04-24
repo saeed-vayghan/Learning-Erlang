@@ -42,9 +42,9 @@ wrong_age(_) ->
 
 %% Examples of guarded function clause heads:
 
-% foo(X) when list(X), hd(X) == head, hd(tl(X)) == head_2 -> 'do-sth';
+% foo(X) when hd(X) == head, hd(tl(X)) == head_2 -> 'do-sth';
 % foo(X, Y, Z) when is_integer(X), is_integer(Y), is_integer(Z), X == Y + Z -> 'do-sth';
-% foo(X, Y, Z) when list(X), hd(X) == {Y, length(Z)} -> 'do-sth';
+% foo(X, Y, Z) when hd(X) == {Y, length(Z)} -> 'do-sth';
 % foo(X, Y, Z) when {X, Y, size(Z)} == {a, b, 5} -> 'do-sth'.
 
 
