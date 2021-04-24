@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 %% Create a fixed-size array with entries 0-9 set to 'undefined'
 A0 = array:new(10).
 10 = array:size(A0).
