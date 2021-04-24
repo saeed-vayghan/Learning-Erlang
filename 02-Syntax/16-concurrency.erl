@@ -80,3 +80,18 @@ fridge2(FoodList) ->
     terminate ->
       ok
   end.
+
+
+
+
+% c(kitchen).
+% {ok,kitchen}
+
+% Pid = kitchen:start([rhubarb, dog, hotdog]).
+% <0.84.0>
+
+% kitchen:take(Pid, dog).
+% {ok,dog}
+
+% kitchen:take(Pid, dog).
+% not_found
