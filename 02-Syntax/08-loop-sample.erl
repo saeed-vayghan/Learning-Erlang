@@ -3,7 +3,17 @@
 
 
 -module(loop). 
--export([while/1, while/2, for/2, start/0]). 
+-export([]). 
+
+
+% You can create a for loop with recursion
+for(0, _) -> 
+  ok; 
+  
+for(Max, Min) when Max > 0 -> 
+  io:fwrite("Num : ~p\n", [Max]), 
+  for(Max - 1, Min). 
+
 
 
 while(L) -> while(L, 0). 
@@ -12,23 +22,3 @@ while([_|T], Acc) ->
   io:fwrite("~w~n",[Acc]), 
   while(T,Acc+1). 
 
-
-
-
-for(0, _) -> 
-  done; 
-
-for(N, Term) when N > 0 -> 
-  io:fwrite("Hello~n"),
-  for(N-1, Term).
-
-
-
-
-
-% start() -> 
-%   X = [1,2,3,4], 
-%   while(X).
-
-start() -> 
-  for(5,1).

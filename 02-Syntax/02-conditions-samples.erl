@@ -35,25 +35,33 @@ start(A) ->
 
 
 
-factorial(0) -> 1;
-factorial(N) -> N * factorial(N - 1).
+factorial_1(0) -> 1;
+factorial_1(N) -> N * factorial_1(N - 1).
 
-factorial(0) -> 1;
-factorial(N) when N > 0 -> N * factorial(N - 1).
 
-factorial(N) ->
+factorial_2(0) -> 1;
+factorial_2(N) when N > 0 -> N * factorial_2(N - 1).
+
+
+factorial_3(N) ->
   if
     N == 0 -> 1;
-    N >  0 -> N * factorial(N - 1)
+    N >  0 -> N * factorial_3(N - 1)
   end.
 
-factorial(N) ->
+
+factorial_4(N) ->
   case N of
     0 -> 1;
 
-    N when (N > 0) -> N * factorial(N - 1)
+    N when (N > 0) -> N * factorial_4(N - 1)
   end.
 
+
+factorial_efficient(N)     -> factorial_efficient(N, 1).
+factorial_efficient(0, ACC) -> ACC;
+factorial_efficient(N, ACC) -> factorial_efficient(N - 1, ACC * N).
+  
 
 
 allocate(Resource) when Resource == 'memory' -> {yes, 64};
