@@ -1,134 +1,100 @@
-%%%-------------------------------------------------------------------
-%%% @author Martin & Eric <erlware-dev@googlegroups.com>
-%%%  [http://www.erlware.org]
-%%% @copyright 2008-2010 Erlware
-%%% @doc RPC over TCP server. This module defines a server process that
-%%%      listens for incoming TCP connections and allows the user to
-%%%      execute RPC commands via that TCP stream.
-%%% @end
-%%%-------------------------------------------------------------------
+%%%% Here is an example of a service that greets people by the given name, and keeps track of how many users it encountered. See usage below. %%%%
+%%%% Greets people and counts number of times it did so. %%%%
 
--module(tr_server).
-
+-module(gen_server_3).
 -behaviour(gen_server).
 
--include_lib("eunit/include/eunit.hrl").
-
 %% API
--export([
-         start_link/1,
-         start_link/0,
-         get_count/0,
-         stop/0
-         ]).
+-export([ start_link/0
+        , greet/1
+        , get_count/0
+        , stop/0]).
 
 %% gen_server callbacks
--export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
+-export([ init/1
+        , handle_call/3
+        , handle_cast/2
+        , handle_info/2
+        , terminate/2
+        , code_change/3]).
 
 -define(SERVER, ?MODULE).
--define(DEFAULT_PORT, 1055).
 
--record(state, {port, lsock, request_count = 0}).
+-record(state, {count :: integer()}).
+
 
 
 %%%===================================================================
-%%% API
+%%% Public API
 %%%===================================================================
 
-
-%%--------------------------------------------------------------------
-%% @doc Starts the server.
-%%
-%% @spec start_link(Port::integer()) -> {ok, Pid}
-%% where
-%%  Pid = pid()
-%% @end
-%%--------------------------------------------------------------------
-start_link(Port) ->
-    gen_server:start_link({local, ?SERVER}, ?MODULE, [Port], []).
-
-%% @spec start_link() -> {ok, Pid}
-%% @doc Calls `start_link(Port)' using the default port.
 start_link() ->
-    start_link(?DEFAULT_PORT).
+  gen_server:start_link({local, ?SERVER}, ?MODULE, {}, []).
 
-%%--------------------------------------------------------------------
-%% @doc Fetches the number of requests made to this server.
-%% @spec get_count() -> {ok, Count}
-%% where
-%%  Count = integer()
-%% @end
-%%--------------------------------------------------------------------
+greet(Name) ->
+  gen_server:cast(?MODULE, {greet, Name}).
+
 get_count() ->
-    gen_server:call(?SERVER, get_count).
+  gen_server:call(?MODULE, {get_count}).
 
-%%--------------------------------------------------------------------
-%% @doc Stops the server.
-%% @spec stop() -> ok
-%% @end
-%%--------------------------------------------------------------------
 stop() ->
-    gen_server:cast(?SERVER, stop).
+  gen_server:cast(?SERVER, stop).
 
 
 %%%===================================================================
-%%% gen_server callbacks
+%%% gen_server callbacks (Private API)
 %%%===================================================================
 
-init([Port]) ->
-    {ok, LSock} = gen_tcp:listen(Port, [{active, true}]),
-    {ok, #state{port = Port, lsock = LSock}, 0}.
-
-handle_call(get_count, _From, State) ->
-    {reply, {ok, State#state.request_count}, State}.
+init({}) ->
+  {ok, #state{count = 0}}.
 
 handle_cast(stop, State) ->
-    {stop, normal, State}.
+  {stop, normal, State};
+handle_cast({greet, Name}, #state{count = Count} = State) ->
+  io:format("Greetings ~s!~n", [Name]),
+  {noreply, State#state{count = Count + 1}};
+handle_cast(Msg, State) ->
+  error_logger:warning_msg("Bad message: ~p~n", [Msg]),
+  {noreply, State}.
 
-handle_info({tcp, Socket, RawData}, State) ->
-    do_rpc(Socket, RawData),
-    RequestCount = State#state.request_count,
-    {noreply, State#state{request_count = RequestCount + 1}};
+handle_call({get_count}, _From, State) ->
+  {reply, {ok, State#state.count}, State};
+handle_call(Request, _From, State) ->
+  error_logger:warning_msg("Bad message: ~p~n", [Request]),
+  {reply, {error, unknown_call}, State}.
 
-handle_info(timeout, #state{lsock = LSock} = State) ->
-    {ok, _Sock} = gen_tcp:accept(LSock),
-    {noreply, State}.
+handle_info(Info, State) ->
+  error_logger:warning_msg("Bad message: ~p~n", [Info]),
+  {noreply, State}.
 
 terminate(_Reason, _State) ->
-    ok.
+  ok.
 
 code_change(_OldVsn, State, _Extra) ->
-    {ok, State}.
+  {ok, State}.
+
 
 %%%===================================================================
-%%% Internal functions
+%%% Test
 %%%===================================================================
-
-do_rpc(Socket, RawData) ->
-    try
-        {M, F, A} = split_out_mfa(RawData),
-        Result = apply(M, F, A),
-        gen_tcp:send(Socket, io_lib:fwrite("~p~n", [Result]))
-    catch
-        _Class:Err ->
-            gen_tcp:send(Socket, io_lib:fwrite("~p~n", [Err]))
-    end.
-
-split_out_mfa(RawData) ->
-    MFA = re:replace(RawData, "\r\n$", "", [{return, list}]),
-    {match, [M, F, A]} =
-        re:run(MFA,
-               "(.*):(.*)\s*\\((.*)\s*\\)\s*.\s*$",
-                   [{capture, [1,2,3], list}, ungreedy]),
-    {list_to_atom(M), list_to_atom(F), args_to_terms(A)}.
-
-args_to_terms(RawArgs) ->
-    {ok, Toks, _Line} = erl_scan:string("[" ++ RawArgs ++ "]. ", 1),
-    {ok, Args} = erl_parse:parse_term(Toks),
-    Args.
-
-
-%% test
 
 start_test() ->
-    {ok, _} = tr_server:start_link(1055).
+  {ok, _} = gen_server_3:start_link().
+
+
+% 1> c(gen_server_3).
+% {ok,gen_server_3}
+
+% 2> gen_server_3:start_link().
+% {ok,<0.62.0>}
+
+% 3> gen_server_3:greet("Andriy").
+% Greetings Andriy!
+% ok
+
+% 4> gen_server_3:greet("Mike").
+% Greetings Mike!
+% ok
+
+% 5> gen_server_3:get_count().
+% {ok,2}

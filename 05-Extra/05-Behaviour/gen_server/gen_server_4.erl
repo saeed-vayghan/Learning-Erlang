@@ -1,157 +1,124 @@
-% This source code create a simple key/value store service based on map Erlang datastructure. Firstly, we need to define all information concerning our gen_server:
+-module(tr_server).
 
-
-
--module(cache).
 -behaviour(gen_server).
 
-% our API
--export([start_link/0]).
--export([get/1, put/2, state/0, delete/1, stop/0]).
+-include_lib("eunit/include/eunit.hrl").
 
-% our handlers
--export([init/1, handle_call/3, handle_cast/2, handle_info/2,
-         terminate/2, code_change/3]).
+%% API
+-export([ start_link/1
+        , start_link/0
+        , get_count/0
+        , stop/0]).
 
-% Defining our function to start `cache` process:
+%% gen_server callbacks
+-export([ init/1
+        , handle_call/3
+        , handle_cast/2
+        , handle_info/2
+        , terminate/2
+        , code_change/3]).
 
+-define(SERVER, ?MODULE).
+-define(DEFAULT_PORT, 1055).
+
+-record(state, {port, lsock, request_count = 0}).
+
+
+%%%===================================================================
+%%% API
+%%%===================================================================
+
+
+%%--------------------------------------------------------------------
+%% @doc Starts the server.
+%%
+%% @spec start_link(Port::integer()) -> {ok, Pid}
+%% where
+%%  Pid = pid()
+%% @end
+%%--------------------------------------------------------------------
+start_link(Port) ->
+  gen_server:start_link({local, ?SERVER}, ?MODULE, [Port], []).
+
+%% @spec start_link() -> {ok, Pid}
+%% @doc Calls `start_link(Port)' using the default port.
 start_link() ->
-    gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+  start_link(?DEFAULT_PORT).
 
-%%%%%%%%%%%%%%
-% API
+%%--------------------------------------------------------------------
+%% @doc Fetches the number of requests made to this server.
+%% @spec get_count() -> {ok, Count}
+%% where
+%%  Count = integer()
+%% @end
+%%--------------------------------------------------------------------
+get_count() ->
+  gen_server:call(?SERVER, get_count).
 
-% Key/Value database is a simple store, value indexed by an unique key. 
-% This implementation is based on map, this datastructure is like hash 
-%  in Perl or dictionaries in Python. 
-
-% put/2
-% put a value indexed by a key. We assume the link is stable 
-% and the data will be written, so, we use an asynchronous call with 
-% gen_server:cast/2.
-
-put(Key, Value) ->
-    gen_server:cast(?MODULE, {put, {Key, Value}}).
-
-% get/1
-% take one argument, a key and will a return the value indexed 
-% by this same key. We use a synchronous call with gen_server:call/2.
-
-get(Key) ->
-    gen_server:call(?MODULE, {get, Key}).
-
-% delete/1 
-% like `put/1`, we assume the data will be removed. So, we use an 
-% asynchronous call with gen_server:cast/2.
-
-delete(Key) ->
-    gen_server:cast(?MODULE, {delete, Key}).
-
-% state/0 
-% This function will return the current state (here the map who contain all 
-% indexed values), we need a synchronous call.
-
-state() ->
-    gen_server:call(?MODULE, {get_state}).
-
-% stop/0
-% This function stop cache server process.
-
+%%--------------------------------------------------------------------
+%% @doc Stops the server.
+%% @spec stop() -> ok
+%% @end
+%%--------------------------------------------------------------------
 stop() ->
-    gen_server:stop(?MODULE).
+  gen_server:cast(?SERVER, stop).
 
-%%%%%%%%%%%%%%%
-% Handlers
 
-% init/1
-% Here init/1 will initialize state with simple empty map datastructure.
+%%%===================================================================
+%%% gen_server callbacks
+%%%===================================================================
 
-init([]) ->
-    {ok, #{}}.
+init([Port]) ->
+  {ok, LSock} = gen_tcp:listen(Port, [{active, true}]),
+  {ok, #state{port = Port, lsock = LSock}, 0}.
 
-% handle_call/3
-% Now, we need to define our handle. In a cache server we need to get our 
-% value from a key, this feature need to be synchronous, so, using 
-% handle_call seems a good choice:
+handle_call(get_count, _From, State) ->
+  {reply, {ok, State#state.request_count}, State}.
 
-handle_call({get, Key}, From, State) ->
-    Response = maps:get(Key, State, undefined),
-    {reply, Response, State};
+handle_cast(stop, State) ->
+  {stop, normal, State}.
 
-% We need to check our current state, like get_fea
+handle_info({tcp, Socket, RawData}, State) ->
+  do_rpc(Socket, RawData),
+  RequestCount = State#state.request_count,
+  {noreply, State#state{request_count = RequestCount + 1}};
 
-handle_call({get_state}, From, State) ->
-    Response = {current_state, State},
-    {reply, Response, State};
-
-% All other messages will be dropped here.
-
-handle_call(_Request, _From, State) ->
-    Reply = ok,
-    {reply, Reply, State}.
-
-% handle_cast/2
-% put/2 will execute this function.
-
-handle_cast({put, {Key, Value}}, State) ->
-    NewState = maps:put(Key, Value, State),
-    {noreply, NewState};
-
-% delete/1 will execute this function.
-
-handle_cast({delete, Key}, State) ->
-    NewState = maps:remove(Key, State),
-    {noreply, NewState};
-
-% All other messages are dropped here.
-
-handle_cast(_Msg, State) ->
-    {noreply, State}.
-
-%%%%%%%%%%%%%%%%
-% other handlers
-
-% We don't need other features, other handlers do nothing.
-
-handle_info(_Info, State) ->
-    {noreply, State}.
+handle_info(timeout, #state{lsock = LSock} = State) ->
+  {ok, _Sock} = gen_tcp:accept(LSock),
+  {noreply, State}.
 
 terminate(_Reason, _State) ->
-    ok.
+  ok.
 
 code_change(_OldVsn, State, _Extra) ->
-    {ok, State}.
+  {ok, State}.
+
+%%%===================================================================
+%%% Internal functions
+%%%===================================================================
+
+do_rpc(Socket, RawData) ->
+  try
+    {M, F, A} = split_out_mfa(RawData),
+    Result = apply(M, F, A),
+    gen_tcp:send(Socket, io_lib:fwrite("~p~n", [Result]))
+  catch
+    _Class:Err ->
+      gen_tcp:send(Socket, io_lib:fwrite("~p~n", [Err]))
+  end.
+
+split_out_mfa(RawData) ->
+  MFA = re:replace(RawData, "\r\n$", "", [{return, list}]),
+  {match, [M, F, A]} = re:run(MFA, "(.*):(.*)\s*\\((.*)\s*\\)\s*.\s*$", [{capture, [1,2,3], list}, ungreedy]),
+  {list_to_atom(M), list_to_atom(F), args_to_terms(A)}.
+
+args_to_terms(RawArgs) ->
+  {ok, Toks, _Line} = erl_scan:string("[" ++ RawArgs ++ "]. ", 1),
+  {ok, Args} = erl_parse:parse_term(Toks),
+  Args.
 
 
+%% test
 
-
-
-
-% % compile cache
-% c(cache).
-
-% % starting cache server
-% cache:start_link().
-
-% % get current store
-% % will return:
-% %   #{}
-% cache:state().
-
-% % put some data
-% cache:put(1, one).
-% cache:put(hello, bonjour).
-% cache:put(list, []).
-
-% % get current store
-% % will return:
-% %   #{1 => one,hello => bonjour,list => []}
-% cache:state().
-
-% % delete a value
-% cache:delete(1).
-% cache:state().
-% %   #{1 => one,hello => bonjour,list => []}
-
-% % stopping cache server
-% cache:stop().
+start_test() ->
+  {ok, _} = tr_server:start_link(1055).
