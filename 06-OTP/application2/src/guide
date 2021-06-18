@@ -1,0 +1,4 @@
+
+
+This application uses the prefix sc_ (for Simple Cache) for all modules, except the main user API module, which is named simple_cache.
+This is a common pattern, to have a single module acting as a front end that uses the same name as the application.

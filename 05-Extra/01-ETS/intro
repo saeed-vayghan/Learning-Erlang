@@ -1,0 +1,10 @@
+https://learnyousomeerlang.com/ets
+https://medium.com/@kansi/erlang-nugget-ets-4ab70308f676
+
+
+ETS tables are particularly useful for data that
+■ Doesn’t need to be shared between virtual machines
+■ Needs to be persistent, but only as long as the VM is alive
+■ May need to be shared by a number of different processes on the VM
+■ Needs fast access times
+■ Is mainly flat and preferably without foreign key relationships to other tables

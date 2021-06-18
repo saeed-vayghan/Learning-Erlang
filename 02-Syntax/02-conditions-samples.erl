@@ -58,7 +58,7 @@ factorial_4(N) ->
   end.
 
 
-factorial_efficient(N)     -> factorial_efficient(N, 1).
+factorial_efficient(N)      -> factorial_efficient(N, 1).
 factorial_efficient(0, ACC) -> ACC;
 factorial_efficient(N, ACC) -> factorial_efficient(N - 1, ACC * N).
   
@@ -69,7 +69,6 @@ allocate(_) -> 'no'.
 
 my_func(Resource) ->
   Max = 128,
-
   case allocate(Resource) of
     {yes, Address} when Address > 0, Address =< Max -> 'succeeds';
     no -> 'fails'

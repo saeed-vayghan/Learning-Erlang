@@ -1,7 +1,7 @@
 
-% a base case;
-% a function that calls itself;
-% a list to try our function on.
+%% a base case;
+%% a function that calls itself;
+%% a list to try our function on.
 
 
 len([]) -> 0;
@@ -60,4 +60,3 @@ tail_zip(X, Y) -> reverse(tail_zip(X, Y, [])).
 tail_zip([], _ ,Acc) -> Acc;
 tail_zip(_, [] ,Acc) -> Acc;
 tail_zip([X | Xs], [Y | Ys], Acc) -> tail_zip(Xs, Ys, [{X, Y} | Acc]).
-

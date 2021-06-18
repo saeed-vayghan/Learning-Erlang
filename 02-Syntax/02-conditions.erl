@@ -53,7 +53,7 @@ case allocate(Resource) of
 end
 
 
-insert(X, []) -> [X];
+insert(X, [])  -> [X];
 insert(X, Set) ->
   case lists:member(X, Set) of
     true  -> Set;

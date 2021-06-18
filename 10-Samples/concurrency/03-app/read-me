@@ -1,7 +1,0 @@
-
-Standard Erlang directory structure, which looks like this:
-
-ebin/     where files will go once they are compiled.
-include/  Used to store .hrl files that are to be included by other applications; he private .hrl files are usually just kept inside the src/ directory.
-priv/     Used for executables that might have to interact with Erlang, such as specific drivers and whatnot.
-src/      Where all .erl files stay.

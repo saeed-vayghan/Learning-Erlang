@@ -1,3 +1,7 @@
+% https://erlang.org/doc/reference_manual/records.html
+% A record is a data structure for storing a fixed number of elements.
+
+
 -module(records).
 -compile(export_all).
 -include("records.hrl").

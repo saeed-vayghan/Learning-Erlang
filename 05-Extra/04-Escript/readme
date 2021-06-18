@@ -1,0 +1,11 @@
+escript provides support for running short Erlang programs without having to compile them first, and an easy way to retrieve the command-line arguments.
+
+
+% chmod u+x factorial
+saeed.vayghani@C02DRC9CMD6R escript % ./factorial 5
+factorial 5 = 120
+
+
+% escript factorial 5
+factorial 5 = 120
+

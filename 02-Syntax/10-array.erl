@@ -26,5 +26,5 @@ A3 = array:fix(A2).
 
 %% A fixed-size array does not grow automatically and does not
 %% allow accesses beyond the last set entry
-{'EXIT',{badarg,_}} = (catch array:set(18, true, A3)).
-{'EXIT',{badarg,_}} = (catch array:get(18, A3)).
+{'EXIT', {badarg, _}} = (catch array:set(18, true, A3)).
+{'EXIT', {badarg, _}} = (catch array:get(18, A3)).

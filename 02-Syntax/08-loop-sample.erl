@@ -22,3 +22,15 @@ while([_|T], Acc) ->
   io:fwrite("~w~n",[Acc]), 
   while(T,Acc+1). 
 
+
+
+loop(Map) when is_map(Map) -> 
+  Keys = maps:keys(Map),
+  loop(Map, Keys).
+
+loop(_ , []) ->
+  ok;
+loop(Map, [Head|Tail]) ->
+  Value = maps:get(Head, Map),
+  io:format("~p: ~p~n", [Head, Value]),
+  loop(Map, Tail).

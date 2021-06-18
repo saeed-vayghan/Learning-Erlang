@@ -1,0 +1,1 @@
+%% A module implementing a supervisor behaviour usually has a name ending with `_sup`.
