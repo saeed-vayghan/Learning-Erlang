@@ -24,8 +24,6 @@ b(a()). % "Password is pony"
 
 
 
-
-
 PrepareAlarm = fun(Room) ->
   io:format("Alarm set in ~s.~n", [Room]),
 
@@ -36,8 +34,9 @@ PrepareAlarm = fun(Room) ->
   end
 end.
 
-AlarmReady = PrepareAlarm("bathroom").
+
 % Alarm set in bathroom.
+AlarmReady = PrepareAlarm("bathroom"). 
 AlarmReady().
 % Alarm tripped in bathroom! Call Batman!
 % Alarm tripped in bathroom! Call Batman!
