@@ -39,9 +39,10 @@ http://erlang.org
 #### Continuous operation, Code loading primitives allow code in a running system to be changed without stopping the system.
 (Very important in embedded real-time systems, telephone exchanges or airtraffic control systems {such systems should not be stopped for software maintenance purposes})
 
-#### Declarative syntax
 #### Automatically memory allocation and real-time garbage collector. Typical programming errors associated with memory management cannot occur.
+
 #### Integration, Erlangcan easily call or make use of programs written in other programming languages. 
+
 #### An application written for a uniprocessor can easily be changed to run on a multiprocessoror network of uniprocessors.
 
 <hr>
