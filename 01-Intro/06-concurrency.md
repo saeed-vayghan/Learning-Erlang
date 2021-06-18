@@ -1,3 +1,5 @@
+#### Principles:
+
 1. Concurrency refers to the idea of having many actors running independently, but not necessarily all at the same time.
 1. Parallelism is having actors running exactly at the same time. 
 1. Each Erlang process would have its own slice of time to run.
