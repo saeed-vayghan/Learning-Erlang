@@ -1,23 +1,11 @@
-%%%----------------------------------------------------------------
-%%% @author Martin Logan <martinjlogan@erlware.org>
-%%% @doc Application behaviour implementation for tcp_rpc.
-%%%
-%%% @copyright 2008 Martin Logan
-%%% @end
-%%%----------------------------------------------------------------,
 -module(tr_app).
 
+% behaviour declaration
 -behaviour(application).
 
-%% Application callbacks
--export([
-     start/2,
-     stop/1
-     ]).
+% callbacks of application behaviour
+-export([start/2, stop/1]).
 
-%%%===================================================================
-%%% Application callbacks
-%%%===================================================================
 
 %%--------------------------------------------------------------------
 %% @private
@@ -35,13 +23,19 @@
 %%      StartArgs = term()
 %% @end
 %%--------------------------------------------------------------------
-start(_StartType, _StartArgs) ->
-    case tr_sup:start_link() of
-      {ok, Pid} ->
-          {ok, Pid};
-      Other ->
-          {error, Other}
-    end.
+
+% {mod, {tr_app, []}} in .pp file
+% _Type would be one of `normal`, `{failover, ...}`, `{takeover, ...}`
+start(_Type, _StartArgs) ->
+  % starts root supervisor
+  % The only real job to be done by the فق_app module is to start the root supervisor when the application is started  
+  case tr_sup:start_link() of
+    {ok, Pid} ->
+      {ok, Pid};
+    Other ->
+      {error, Other}
+  end.
+
 
 %%--------------------------------------------------------------------
 %% @private
@@ -53,9 +47,7 @@ start(_StartType, _StartArgs) ->
 %% @spec stop(State) -> void()
 %% @end
 %%--------------------------------------------------------------------
-stop(_State) ->
-    ok.
 
-%%%===================================================================
-%%% Internal functions
-%%%===================================================================
+% The stop/1 callback is simple in this case: you don’t need to do anything special on shutdown, so you ignore the input parameter
+stop(_State) ->
+  ok.

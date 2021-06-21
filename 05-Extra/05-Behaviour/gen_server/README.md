@@ -24,9 +24,7 @@ Structure:
 
 #### Tip: Messages are delivered to the mailbox of a process and stay there until the process extracts them. There is no size limit on the mailbox.
 
-<br>
-
-#### Timeout
+#### Timeout:
 When a gen_server has set a timeout, and that timeout triggers, an out-of-band mes- sage with the single atom timeout is generated,
 and the handle_info/2 callback is invoked to handle it.
 This mechanism is usually used to make servers wake up and take some action if they have received no requests within the timeout period.
