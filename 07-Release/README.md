@@ -18,8 +18,9 @@
 
 #### Steps:
 
-1. Create `.rel` file.
-1. On a terminal session:
+* Create `.rel` file.
+
+* On a terminal session:
   ```
   erl -pa path-to/lib/simple_cache/ebin
 
@@ -29,15 +30,17 @@
   %% Omit local for release process.
   systools:make_script("simple_cache", []).
   ```
-1. create `.config` file to be used with your release.
-1. Starting a target system:
+* create `.config` file to be used with your release.
+
+* Starting a target system:
   * At this point, you have all the parts required to start the system. To do this, you need to specify two things: which .boot file to use and which .config file to use
   ```
   erl –sname cache –boot ./simple_cache –config ./sys
   %% Or
   erl –sname cache –boot ./simple_cache –config ./sys –detached
   ```
-1. Creating a release package:
+
+* Creating a release package:
   ```
   systools:make_tar("simple_cache", [{erts, code:root_dir()}]).
   ```

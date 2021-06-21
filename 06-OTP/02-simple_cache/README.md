@@ -15,33 +15,33 @@ This is a common pattern, to have a single module acting as a `front` end that u
 
 #### Flow:
 
-1. Compile all the module:
+* Compile all the module:
   ```
   erlc -o ./ebin ./src/*.erl
   % Or
   erl –pa ebin
   ```
 
-1. Start the application:
+* Start the application:
   * `application:start(simple_cache).` => `application:start(simple_cache, temporary).`
   This means even if it terminates unexpectedly, the rest of the runtime system isn’t affected; only a crash report is generated.
 
   * `application:start(simple_cache, permanent).`
   Application is considered required for the target system to function. the entire `runtime system shuts down` so that everything can be restarted from scratch.
 
-1. `{mod, {sc_app, []}}` inside the `simple_cache.app` tells OTP how to start the application.
+* `{mod, {sc_app, []}}` inside the `simple_cache.app` tells OTP how to start the application.
   * `sc_app:start/2` and `sc_app:stop/1`
   * `sc_store` process will be initialized.
 
-1. `sc_sup:start_child/2` starts a new child through `{sc_element, start_link, []}`
+* `sc_sup:start_child/2` starts a new child through `{sc_element, start_link, []}`
   * Which indicates the `module name`, `function name`, and `arguments` of the start function for the child process.
   * Gets the list `[Value, LeaseTime]` appended to the argument list `[]` before the call is made, resulting in a call to `sc_element:start_link(Value, LeaseTime)`.
   * This results in a dynamically generated supervi- sion tree.
   * It hides the details of how `starting a child process` is done.
 
-1. `sc_store` process will take care of the local storage.
+* `sc_store` process will take care of the local storage.
 
-1. `simple_cache:insert/2`
+* `simple_cache:insert/2`
   * Will create a new `sc_element` process through `sc_element:create`.
 
-1. A new `sc_element` process will be generated through `sc_sup:start_child(Value, LeaseTime)`
+* A new `sc_element` process will be generated through `sc_sup:start_child(Value, LeaseTime)`
