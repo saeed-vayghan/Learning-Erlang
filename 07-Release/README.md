@@ -21,7 +21,7 @@
 1. Create `.rel` file.
 
 1. On a terminal session:
-  ````
+  ```
   erl -pa path-to/lib/simple_cache/ebin
 
   systools:make_script("simple_cache", [local]).
