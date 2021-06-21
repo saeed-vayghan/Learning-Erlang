@@ -18,6 +18,7 @@
         , terminate/2
         , code_change/3]).
 
+%% Constants
 -define(SERVER, ?MODULE).
 
 -record(state, {count :: integer()}).

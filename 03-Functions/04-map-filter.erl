@@ -1,7 +1,7 @@
 -module(functions).
 -compile(export_all).
 
-% https://erlang.org/doc/man/lists.html#foreach-2
+% https://erlang.org/doc/man/lists.html
 
 
 %% Using lists:map
