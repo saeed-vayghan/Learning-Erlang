@@ -27,10 +27,8 @@
 %% @end
 %%--------------------------------------------------------------------
 start(_StartType, _StartArgs) ->
-  % Starts root supervisor
-  % The only real job to be done by the sc_app module is to start the root supervisor when the application is started
-  %
-  % It’s a good design principle to limit the amount of application code in supervisors in order to keep them small and reliable.
+  % It’s a good design principle to limit the amount of application code 
+  % in supervisors in order to keep them small and reliable.
   % so we put `sc_store:init()` inside the application part 
   sc_store:init(), % initializing storage
 
