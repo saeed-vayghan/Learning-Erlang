@@ -2,6 +2,9 @@
   * Applications are the way you package related modules in Erlang.
   * Supervisors are one of the most important features of OTP. They monitor other processes and take action if anything goes wrong.
 
+<hr>
+
+#### The Structure Of An OTP Application Directories
 
 * `/doc`
   Documentation. If you generate documentation from EDoc, you put your overview.edoc file here
