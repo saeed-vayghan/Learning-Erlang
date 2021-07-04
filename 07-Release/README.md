@@ -2,7 +2,7 @@
 
 * A release describes a running Erlang runtime system.
 * A release has a version.
-* A release specifies which versions of required applications are required. It also has a version number of its own.
+* A release specifies which versions of required applications are required.
 * Installing a release on a host machine produces a target system.
 
 <br>
