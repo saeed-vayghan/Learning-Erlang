@@ -6,10 +6,13 @@
 * Installing a release on a host machine produces a target system.
 
 <br>
-<hr>
-<br>
 
-#### Details:
+### Using Rebar3
+You'll usually have a file named `relx.config` or a `relx` tuple inside `rebar.config` file, which will state which top-level applications are part of the release and some options regarding their packaging.
+
+<hr>
+
+#### Through Classic way (systools, reltool):
 
 * release file with the extension `.rel` containing the metadata for each release.  
 * `.script` file contains a full specification of what will be included in applications
