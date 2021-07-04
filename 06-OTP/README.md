@@ -27,3 +27,13 @@
 
   * `src/<app-name>_sup.erl`
     root supervisor
+
+<hr>
+
+#### The supervisor restart strategy reflects the relationship between processes under a supervisor:
+ 
+* `one_for_one` and `simple_one_for_oneare` used for processes that are not dependentupon each other directly, although their failures will collectively be counted towardstotal application shutdown.
+
+* `rest_for_onewill` be used to represent processes that depend on each other in alinear manner.
+
+* `one_for_allis` used for processes that entirely depend on each other
