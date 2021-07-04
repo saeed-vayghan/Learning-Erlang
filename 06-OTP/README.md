@@ -32,8 +32,8 @@
 
 #### The supervisor restart strategy reflects the relationship between processes under a supervisor:
  
-* `one_for_one` and `simple_one_for_one` are used for processes that are not dependentupon each other directly, although their failures will collectively be counted towardstotal application shutdown.
+* `one_for_one` and `simple_one_for_one` are used for processes that are not dependent upon each other directly, although their failures will collectively be counted towards total application shutdown.
 
-* `rest_for_onewill` be used to represent processes that depend on each other in alinear manner.
+* `rest_for_onewill` be used to represent processes that depend on each other in a linear manner.
 
-* `one_for_allis` used for processes that entirely depend on each other
+* `one_for_allis` used for processes that entirely depend on each other.
