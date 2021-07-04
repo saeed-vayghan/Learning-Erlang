@@ -38,8 +38,12 @@
 
 * `one_for_allis` used for processes that entirely depend on each other.
 
+#### Application Strategies
+* `permanent`: if the app terminates, the entire system is taken down, excluding `manual termination` of the app with `application:stop/1`.
+* `transient`: if the app terminates for reason `normal`, that's ok. Any other reason for termination shuts down the entire system.
+* `temporary`: the application is allowed to stop for any reason. It will be reported, but nothing bad will happen.
 
-### Tips:
+#### Tips:
 
 * One very important part of Erlang supervisors and their supervision trees is that their `start` phases are `synchronous`.
 
