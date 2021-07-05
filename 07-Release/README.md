@@ -2,14 +2,33 @@
 
 * A release describes a running Erlang runtime system.
 * A release has a version.
-* A release specifies which versions of required applications are required. It also has a version number of its own.
+* A release specifies which versions of required applications are required.
 * Installing a release on a host machine produces a target system.
 
-<br>
-<hr>
-<br>
+### Using Rebar3
+You'll usually have a file named `relx.config` or a `relx` tuple inside `rebar.config` file, which will state which top-level applications are part of the release and some options regarding their packaging.
 
-#### Details:
+### Common `release` strcture:
+```
+./lib/
+  _build/
+  
+  apps/
+    myapp1/
+      src/
+    myapp2/
+      src/
+  
+  doc/
+  LICENSE.txt
+  README.md
+  rebar.config
+  rebar.lock
+```
+
+<hr>
+
+#### Through Classic way (systools, reltool):
 
 * release file with the extension `.rel` containing the metadata for each release.  
 * `.script` file contains a full specification of what will be included in applications

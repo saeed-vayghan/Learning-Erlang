@@ -27,3 +27,28 @@
 
   * `src/<app-name>_sup.erl`
     root supervisor
+
+<hr>
+
+#### The supervisor restart strategy reflects the relationship between processes under a supervisor:
+ 
+* `one_for_one` and `simple_one_for_one` are used for processes that are not dependent upon each other directly, although their failures will collectively be counted towards total application shutdown.
+
+* `rest_for_onewill` be used to represent processes that depend on each other in a linear manner.
+
+* `one_for_allis` used for processes that entirely depend on each other.
+
+#### Application Strategies
+* `permanent`: if the app terminates, the entire system is taken down, excluding `manual termination` of the app with `application:stop/1`.
+* `transient`: if the app terminates for reason `normal`, that's ok. Any other reason for termination shuts down the entire system.
+* `temporary`: the application is allowed to stop for any reason. It will be reported, but nothing bad will happen.
+
+#### Tips:
+
+* One very important part of Erlang supervisors and their supervision trees is that their `start` phases are `synchronous`.
+
+* Each `OTP process` has the potential to prevent its siblings and cousins from booting. If the process dies, it’s retried again, and again, until it works,or fails too often.
+
+* Restarting a process is about bringing it back to a `stable, known state`. From there, things can be retried.
+
+* An initialized process should be stable no matter what happens. That way, when its siblings and cousins get started later on, they can be booted fully knowing that the rest of the system that came up before them is healthy.
